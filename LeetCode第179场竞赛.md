@@ -124,19 +124,35 @@ class Solution:
 
 ```python
 class Solution:
-    def maxSumBST(self, root: TreeNode) -> int:
-        res = 0
-        def dfs(root):
-            nonlocal res
-            if not root:return [True, 0] ## res[0]:表示该节点是否为根节点, res[1]:为节点值的和
-            l, r = dfs(root.left), dfs(root.right)
-            if l[0] and r[0] and (not root.left or root.val > root.left.val) and (not root.right or root.val < root.right.val):
-                x = l[1] + r[1] + root.val
-                res = max(res, x)
-                return [True, x]
-            return [False, 0]
-        dfs(root)
-        return res
+    def frogPosition(self, n: int, edges: List[List[int]], t: int, target: int) -> float:
+        memo = {}
+        for x, f in edges:
+            if x in memo:
+                memo[x].append(f)
+            else:
+                memo[x] = [f]
+            if f in memo:
+                memo[f].append(x)
+            else:
+                memo[f] = [x]
+        if target == 1 and 1 not in memo: return 1
+        if target == 1: return 0
+        que, step, v = collections.deque([(1, 1)]), 0, [0] * (n + 1)
+        v[1] = 1
+        while que and step <= t:
+            l = len(que)
+            for _ in range(l):
+                node, p = que.popleft()
+                if node == target: 
+                    if step == t or len(memo[node]) == 1:
+                        return p
+                    return 0
+                for i in memo[node]:
+                    if v[i]: continue
+                    v[i] = 1
+                    que.append((i, p / (len(memo[node]) - (0 if step == 0 else 1))))
+            step += 1
+        return 0
 ```
 
 
