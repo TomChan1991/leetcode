@@ -102,7 +102,7 @@ class CustomStack:
 class Solution:
     def balanceBST(self, root: TreeNode) -> TreeNode:
         allNum = []
-        def getall(root):
+        def dfs(root):
             nonlocal allNum
             if not root: return
             getall(root.left)
@@ -118,7 +118,7 @@ class Solution:
             root.left = build(start, mid - 1)
             root.right = build(mid + 1, end)
             return root
-        getall(root)
+        dfs(root)
         return build(0, len(allNum) - 1)
 ```
 
